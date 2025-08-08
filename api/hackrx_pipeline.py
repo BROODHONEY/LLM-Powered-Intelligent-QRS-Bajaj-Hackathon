@@ -71,7 +71,7 @@ def answer_queries(queries: List[str]) -> List[str]:
         )
         print("[INFO] Generating answer")
         t_gen = timer_ms()
-        ans = generate_answer(prompt)
+        ans = generate_answer(prompt, max_tokens=int(os.getenv("MAX_NEW_TOKENS", "128")))
         print(f"[TIME] Generation (LLM): {timer_ms() - t_gen} ms")
         print(f"[INFO] Generated answer: {ans.strip()}")
         answers.append(ans.strip())

@@ -4,16 +4,17 @@ python-dotenv==1.0.1
 requests==2.32.3
 numpy==1.26.4
 pdfplumber==0.11.4
-faiss-cpu
 sentence-transformers==2.7.0
 InstructorEmbedding==1.0.1
 transformers==4.42.4
 accelerate==0.33.0
 huggingface-hub==0.24.5
 
-# Pytorch (choose one of CPU/GPU wheels suitable for your system)
-torch==2.1.2
-torchvision==0.16.2
-torchaudio==2.1.2
-# If using NVIDIA CUDA 11.8, install via:
-# pip install --index-url https://download.pytorch.org/whl/cu118 torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+# Optional: FAISS (skip on Windows if it fails to install)
+faiss-cpu; platform_system != "Windows"
+
+# NOTE: Install PyTorch separately with the right CUDA/CPU wheel for your system.
+# For CUDA 11.8 (recommended for GTX 1650 Ti on Windows):
+#   pip install --index-url https://download.pytorch.org/whl/cu118 torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+# For CPU-only:
+#   pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
