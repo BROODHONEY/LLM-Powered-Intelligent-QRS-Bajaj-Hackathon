@@ -22,7 +22,7 @@ if HF_API_TOKEN:
         # Proceed without login; public models may still be accessible
         pass
 
-MODEL_NAME = os.getenv("HF_MODEL_NAME", "mistralai/Mistral-7B-Instruct-v0.1")
+MODEL_NAME = os.getenv("HF_MODEL_NAME", "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B")
 USE_4BIT = os.getenv("HF_LOAD_IN_4BIT", "0") == "1"  # disabled by default on Windows
 USE_8BIT = os.getenv("HF_LOAD_IN_8BIT", "0") == "1"
 ATTN_IMPL = os.getenv("HF_ATTN_IMPL", "auto")  # options: auto|sdpa|flash_attention_2
