@@ -22,7 +22,8 @@ if HF_API_TOKEN:
         # Proceed without login; public models may still be accessible
         pass
 
-MODEL_NAME = os.getenv("HF_MODEL_NAME", "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B")
+# Use Qwen2.5-3B-Instruct by default for higher accuracy
+MODEL_NAME = os.getenv("HF_MODEL_NAME", "Qwen/Qwen2.5-3B-Instruct")
 USE_4BIT = os.getenv("HF_LOAD_IN_4BIT", "0") == "1"  # disabled by default on Windows
 USE_8BIT = os.getenv("HF_LOAD_IN_8BIT", "0") == "1"
 ATTN_IMPL = os.getenv("HF_ATTN_IMPL", "auto")  # options: auto|sdpa|flash_attention_2
@@ -100,57 +101,38 @@ if has_cuda:
     except Exception:
         pass
 
-# Optional: live decoding streamer
-streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
-
-def format_chat_prompt(user_text: str, system_text: str = "You are a helpful assistant.") -> Dict[str, torch.Tensor]:
-    """
-    Formats input for chat-tuned models. Prefer the tokenizer's chat template.
-    Fallback to Mistral Instruct-style [INST] prompt if template unavailable.
-    """
+def _format_chat(user_text: str, system_text: str = "You are a helpful assistant.") -> Dict[str, torch.Tensor]:
     messages = [
         {"role": "system", "content": system_text},
         {"role": "user", "content": user_text},
     ]
     try:
-        # Build a template string first, then tokenize to get attention_mask
-        template_str = tokenizer.apply_chat_template(
-            messages,
-            add_generation_prompt=True,
-            tokenize=False,
-        )
-        encoded = tokenizer(
-            template_str,
-            return_tensors="pt",
-            add_special_tokens=False,
-        )
-        return {k: v.to(model.device) for k, v in encoded.items()}
+        template = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
+        enc = tokenizer(template, return_tensors="pt", add_special_tokens=False)
     except Exception:
-        # Fallback for tokenizers without chat templates
-        prompt = f"[INST] <<SYS>>{system_text}<</SYS>> {user_text} [/INST]"
-        encoded = tokenizer(prompt, return_tensors="pt")
-        return {k: v.to(model.device) for k, v in encoded.items()}
+        prompt = f"<|system|>\n{system_text}\n<|end|>\n<|user|>\n{user_text}\n<|end|>\n<|assistant|>\n"
+        enc = tokenizer(prompt, return_tensors="pt")
+    return {k: v.to(model.device) for k, v in enc.items()}
 
-def generate_answer(prompt: str, temperature: float = 0.1, max_tokens: int = 256) -> str:
-    # Build chat-formatted input for Instruct model
-    encoded_inputs = format_chat_prompt(prompt)
+def generate_answer(prompt: str, max_tokens: int = 256) -> str:
+    # Use chat-style formatting for better instruction following (e.g., Qwen)
+    encoded = _format_chat(prompt)
 
     with torch.inference_mode():
         outputs = model.generate(
-            **encoded_inputs,
+            **encoded,
             max_new_tokens=max_tokens,
-            temperature=temperature,
             do_sample=False,
             eos_token_id=tokenizer.eos_token_id,
             pad_token_id=tokenizer.pad_token_id,
             use_cache=True,
-            streamer=None,  # set to `streamer` for live token printing
+            streamer=None,
         )
 
-    # Since we used a chat template, slice only the newly generated tail
-    prompt_length = encoded_inputs["input_ids"].shape[-1]
-    generated = outputs[0][prompt_length:]
-    return tokenizer.decode(generated, skip_special_tokens=True).strip()
+    # Only decode the newly generated tail beyond the prompt
+    prompt_length = encoded["input_ids"].shape[-1]
+    generated_ids = outputs[0][prompt_length:]
+    return tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
 
 if __name__ == "__main__":
     print(generate_answer("Explain RAG in one paragraph.")) 
