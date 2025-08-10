@@ -17,9 +17,9 @@ numpy
 pdfplumber
 
 # Machine Learning and AI
-torch
-torchvision
-torchaudio
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # Transformers and HuggingFace
 transformers
