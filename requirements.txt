@@ -1,20 +1,58 @@
+# Core Web Framework
 fastapi==0.111.0
 uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+
+# Environment and Configuration
 python-dotenv==1.0.1
+pydantic==2.10.4
+
+# HTTP and Network
 requests==2.32.3
+urllib3==2.2.1
+
+# Data Processing and Scientific Computing
 numpy==1.26.4
+pandas==2.2.1
+
+# PDF Processing
 pdfplumber==0.11.4
-sentence-transformers==2.7.0
-InstructorEmbedding==1.0.1
+PyPDF2==3.0.1
+
+# Text Processing
+beautifulsoup4==4.12.3
+lxml==5.1.0
+html5lib==1.1
+
+# Machine Learning and AI
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# Transformers and HuggingFace
 transformers==4.42.4
 accelerate==0.33.0
 huggingface-hub==0.24.5
+tokenizers==0.19.1
 
-# Optional: FAISS (skip on Windows if it fails to install)
-faiss-cpu; platform_system != "Windows"
+# Embeddings and Vector Search
+sentence-transformers==2.7.0
+InstructorEmbedding==1.0.1
 
-# NOTE: Install PyTorch separately with the right CUDA/CPU wheel for your system.
-# For CUDA 11.8 (recommended for GTX 1650 Ti on Windows):
-#   pip install --index-url https://download.pytorch.org/whl/cu118 torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
-# For CPU-only:
-#   pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+# Vector Database (FAISS)
+faiss-cpu==1.7.4
+
+# Utilities
+tqdm==4.66.2
+regex==2023.12.25
+
+# Development and Testing (Optional)
+pytest==8.0.2
+pytest-asyncio==0.23.5
+httpx==0.27.0
+
+# Performance and Monitoring
+psutil==5.9.8
+
+# Security
+cryptography==42.0.5
