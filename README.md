@@ -63,7 +63,7 @@ A sophisticated, high-performance Question-Answering system built with FastAPI t
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/BROODHONEY/LLM-Powered-Intelligent-QRS-Bajaj-Hackathon.git
 cd LLM-Powered-Intelligent-QRS-Bajaj-Hackathon
 ```
 
