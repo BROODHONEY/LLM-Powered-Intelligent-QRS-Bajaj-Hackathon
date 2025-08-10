@@ -1,37 +1,38 @@
-fastapi
-uvicorn[standard]
-python-multipart
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
 
 # Environment and Configuration
-python-dotenv
-pydantic
+python-dotenv==1.0.1
+pydantic==2.10.4
+
 # HTTP and Network
-requests
-urllib3
+requests==2.32.3
+urllib3==2.2.1
 
 # Data Processing and Scientific Computing
-numpy
+numpy==1.26.4
 
 # PDF Processing
-pdfplumber
+pdfplumber==0.11.4
 
 # Machine Learning and AI
-torch
-torchvision
-torchaudio
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
 
 # Transformers and HuggingFace
-transformers
-huggingface-hub
-tokenizers
+transformers==4.42.4
+huggingface-hub==0.24.5
+tokenizers==0.19.1
 
 # Embeddings and Vector Search
-sentence-transformer
-InstructorEmbedding
+sentence-transformers==2.7.0
+InstructorEmbedding==1.0.1
 
 # Vector Database (FAISS)
-faiss-cpu
+faiss-cpu==1.7.4
 
 # Utilities
-tqdm
-regex
+tqdm==4.66.2
+regex==2023.12.25
